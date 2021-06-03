@@ -4,13 +4,14 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.utils import date_diff, nowdate, formatdate, add_days
+from six import iteritems
 
 def daily():
-	loan_period = frappe.db.get_value("Library Management Settings", None, "loan_period")
+	loan_period = frappe.db.get_single_value('Library Management Settings', 'loan_period')
 
 	overdue = get_overdue(loan_period)
 
-	for member, items in overdue.iteritems():
+	for member, items in iteritems(overdue):
 		content = """<h2>Following Items are Overdue</h2>
 		<p>Please return them as soon as possible</p><ol>"""
 
@@ -41,3 +42,4 @@ def get_overdue(loan_period):
 			overdue_by_member[d.library_member].append(d)
 
 		articles_transacted.append(d.article)
+	return overdue_by_member

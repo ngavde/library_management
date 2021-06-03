@@ -1,72 +1,88 @@
 {
- "autoname": "LM.#######", 
- "creation": "2014-05-06 14:26:13.025517", 
- "docstatus": 0, 
- "doctype": "DocType", 
- "document_type": "Master", 
+ "actions": [],
+ "autoname": "LM.#######",
+ "creation": "2014-05-06 14:26:13.025517",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "library_member",
+  "member_first_name",
+  "member_last_name",
+  "from_date",
+  "to_date",
+  "paid",
+  "amended_from"
+ ],
  "fields": [
   {
-   "fieldname": "library_member", 
-   "fieldtype": "Link", 
-   "in_list_view": 1, 
-   "label": "Library Member", 
-   "options": "Library Member", 
-   "permlevel": 0, 
+   "fieldname": "library_member",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Library Member",
+   "options": "Library Member",
    "reqd": 1
-  }, 
+  },
   {
-   "fieldname": "member_first_name", 
-   "fieldtype": "Read Only", 
-   "in_list_view": 1, 
-   "label": "Member First Name", 
-   "options": "library_member.first_name", 
-   "permlevel": 0
-  }, 
+   "fetch_from": "library_member.first_name",
+   "fieldname": "member_first_name",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Member First Name"
+  },
   {
-   "fieldname": "member_last_name", 
-   "fieldtype": "Read Only", 
-   "in_list_view": 1, 
-   "label": "Member Last Name", 
-   "options": "library_member.last_name", 
-   "permlevel": 0
-  }, 
+   "fetch_from": "library_member.last_name",
+   "fieldname": "member_last_name",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Member Last Name"
+  },
   {
-   "fieldname": "from_date", 
-   "fieldtype": "Date", 
-   "in_list_view": 1, 
-   "label": "From Date", 
-   "permlevel": 0, 
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
    "reqd": 1
-  }, 
+  },
   {
-   "fieldname": "to_date", 
-   "fieldtype": "Date", 
-   "in_list_view": 1, 
-   "label": "To Date", 
-   "permlevel": 0, 
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
    "reqd": 1
-  }, 
+  },
   {
-   "fieldname": "paid", 
-   "fieldtype": "Check", 
-   "label": "Paid", 
-   "permlevel": 0
+   "default": "0",
+   "fieldname": "paid",
+   "fieldtype": "Check",
+   "label": "Paid"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Library Membership",
+   "print_hide": 1,
+   "read_only": 1
   }
- ], 
- "modified": "2014-05-09 16:51:16.907918", 
- "modified_by": "Administrator", 
- "module": "Library Management", 
- "name": "Library Membership", 
- "name_case": "", 
- "owner": "Administrator", 
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-05-31 22:17:17.110473",
+ "modified_by": "Administrator",
+ "module": "Library Management",
+ "name": "Library Membership",
+ "owner": "Administrator",
  "permissions": [
   {
-   "create": 1, 
-   "delete": 1, 
-   "permlevel": 0, 
-   "read": 1, 
-   "role": "Librarian", 
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Librarian",
    "write": 1
   }
- ]
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
 }

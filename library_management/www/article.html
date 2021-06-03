@@ -1,0 +1,48 @@
+{% extends "templates/web.html" %}
+
+{% block title %} {{ _("Article") }} {% endblock %}
+
+{% block header_actions %}
+{% endblock %}
+    {% block page_content %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container" style="background: -webkit-linear-gradient(left, #3931af, #00c6ff);">
+    <br>
+    <h4 class="card-body text-center">Available Articles </h4>
+	<br>
+	<div class="row" id="ads">
+    <!-- Category Card -->
+    {% set count = namespace(value="First") %}
+    {% for item in membership %}
+
+    <div class="col-md-4">
+        <div class="card rounded">
+            <div class="ad-title m-auto">
+<!--                <span class="card-notify-year"></span>-->
+                <span> <img src={{item.image}} alt="Girl in a jacket" width="500" height="600"> </span>
+            </div>
+            <div class="card-image-overlay m-auto" id="sub_name">
+<!--                <span class="card-detail-badge">Used</span>-->
+                <br>
+<!--                <p class="card-detail-badge" id="itm_name" value="abc" ><b >{{item.name}}</b></p>-->
+<!--                <span class="card-detail-badge">13000 Kms</span>-->
+            </div>
+            <div class="card-body text-center">
+                <div class="ad-title m-auto">
+                    <h5>{{item.name}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+        <br><br>
+    {% endfor %}
+</div>
+</div>
+
+
+    {% endblock %}

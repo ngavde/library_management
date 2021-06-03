@@ -3,9 +3,9 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe.model.document import Document
+from frappe.website.website_generator import WebsiteGenerator
 
-class Article(Document):
+class Article(WebsiteGenerator):
 	def get_status(self):
 		last_transaction = frappe.get_list("Library Transaction",
 			fields=["transaction_type"],
