@@ -1,0 +1,62 @@
+{
+ "charts": [
+  {
+   "chart_name": "Delivery Trends",
+   "label": "ggg"
+  }
+ ],
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Doctypes</span>\",\"col\":12}},{\"type\":\"paragraph\",\"data\":{\"text\":\"Library Transaction\",\"col\":12}}]",
+ "creation": "2022-02-16 10:23:13.358665",
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "",
+ "idx": 0,
+ "label": "Doctypes",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Library Transaction",
+   "link_count": 0,
+   "link_to": "Library Transaction",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Library Member",
+   "link_count": 0,
+   "link_to": "Library Member",
+   "link_type": "DocType",
+   "onboard": 1,
+   "only_for": "India",
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-02-28 13:09:52.155537",
+ "modified_by": "Administrator",
+ "module": "Library Management",
+ "name": "Doctypes",
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 27.0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Library Member History",
+   "link_to": "Library Member History",
+   "type": "DocType"
+  }
+ ],
+ "title": "Doctypes"
+}

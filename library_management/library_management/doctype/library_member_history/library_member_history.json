@@ -1,0 +1,101 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "LMHistory-.####",
+ "creation": "2022-02-03 12:34:54.208274",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "member_name",
+  "personal_information_section",
+  "member_first_name",
+  "member_last_name",
+  "email",
+  "phone",
+  "details_section",
+  "transaction_history"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "transaction_history",
+   "fieldtype": "Table",
+   "label": "Transaction History",
+   "options": "Library Child Table"
+  },
+  {
+   "fieldname": "member_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Member Name",
+   "options": "Library Member",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "member_name.first_name",
+   "fieldname": "member_first_name",
+   "fieldtype": "Data",
+   "label": "Member First Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "member_name.last_name",
+   "fieldname": "member_last_name",
+   "fieldtype": "Data",
+   "label": "Member Last Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "member_name.email_address",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "member_name.phone",
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "read_only": 1
+  },
+  {
+   "fieldname": "personal_information_section",
+   "fieldtype": "Section Break",
+   "label": "Personal Information"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-02-07 17:29:09.595789",
+ "modified_by": "Administrator",
+ "module": "Library Management",
+ "name": "Library Member History",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "member_name",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "member_name",
+ "track_changes": 1
+}

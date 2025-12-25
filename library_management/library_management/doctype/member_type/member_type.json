@@ -1,0 +1,238 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:member_type_name",
+ "creation": "2023-12-25 15:53:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "member_type_name",
+  "description",
+  "column_break_3",
+  "priority_level",
+  "color",
+  "section_break_6",
+  "max_books_allowed",
+  "loan_period_days",
+  "column_break_9",
+  "max_renewals_allowed",
+  "renewal_period_days",
+  "section_break_12",
+  "membership_fee_annual",
+  "late_fee_per_day",
+  "column_break_15",
+  "reservation_fee",
+  "processing_fee",
+  "section_break_18",
+  "can_reserve_books",
+  "can_renew_online",
+  "column_break_21",
+  "priority_reservations",
+  "email_notifications",
+  "section_break_24",
+  "disabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "member_type_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Member Type Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "5",
+   "fieldname": "priority_level",
+   "fieldtype": "Int",
+   "label": "Priority Level (1-10)"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Display Color"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Borrowing Privileges"
+  },
+  {
+   "default": "5",
+   "fieldname": "max_books_allowed",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Maximum Books Allowed",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "14",
+   "fieldname": "loan_period_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Loan Period (Days)",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "2",
+   "fieldname": "max_renewals_allowed",
+   "fieldtype": "Int",
+   "label": "Maximum Renewals Allowed",
+   "non_negative": 1
+  },
+  {
+   "default": "7",
+   "fieldname": "renewal_period_days",
+   "fieldtype": "Int",
+   "label": "Renewal Period (Days)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break",
+   "label": "Fees & Charges"
+  },
+  {
+   "default": "0",
+   "fieldname": "membership_fee_annual",
+   "fieldtype": "Currency",
+   "label": "Annual Membership Fee"
+  },
+  {
+   "default": "1.00",
+   "fieldname": "late_fee_per_day",
+   "fieldtype": "Currency",
+   "label": "Late Fee Per Day"
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "reservation_fee",
+   "fieldtype": "Currency",
+   "label": "Reservation Fee"
+  },
+  {
+   "default": "0",
+   "fieldname": "processing_fee",
+   "fieldtype": "Currency",
+   "label": "Processing Fee"
+  },
+  {
+   "fieldname": "section_break_18",
+   "fieldtype": "Section Break",
+   "label": "Privileges"
+  },
+  {
+   "default": "1",
+   "fieldname": "can_reserve_books",
+   "fieldtype": "Check",
+   "label": "Can Reserve Books"
+  },
+  {
+   "default": "1",
+   "fieldname": "can_renew_online",
+   "fieldtype": "Check",
+   "label": "Can Renew Online"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "priority_reservations",
+   "fieldtype": "Check",
+   "label": "Priority Reservations"
+  },
+  {
+   "default": "1",
+   "fieldname": "email_notifications",
+   "fieldtype": "Check",
+   "label": "Email Notifications"
+  },
+  {
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Library Member",
+   "link_fieldname": "member_type"
+  }
+ ],
+ "modified": "2023-12-25 15:53:00.000000",
+ "modified_by": "Administrator",
+ "module": "Library Management",
+ "name": "Member Type",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Librarian",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Library Member",
+   "share": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "priority_level",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "member_type_name",
+ "track_changes": 1
+}
