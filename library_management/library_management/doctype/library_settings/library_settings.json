@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+<<<<<<< HEAD
   "library_info_section",
   "library_name",
   "library_address",
@@ -168,12 +169,31 @@
    "fieldtype": "Select",
    "label": "Notification Frequency",
    "options": "Daily\nWeekly\nNever"
+=======
+  "loan_period",
+  "maximum_number_of_issued_articles"
+ ],
+ "fields": [
+  {
+   "fieldname": "loan_period",
+   "fieldtype": "Int",
+   "label": "Loan Period"
+  },
+  {
+   "fieldname": "maximum_number_of_issued_articles",
+   "fieldtype": "Int",
+   "label": "Maximum Number of Issued Articles"
+>>>>>>> 77745fb (Changes)
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-12-25 15:53:00.000000",
+=======
+ "modified": "2022-02-03 11:10:35.768493",
+>>>>>>> 77745fb (Changes)
  "modified_by": "Administrator",
  "module": "Library Management",
  "name": "Library Settings",
@@ -188,6 +208,7 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+<<<<<<< HEAD
   },
   {
    "create": 1,
@@ -197,6 +218,8 @@
    "role": "Librarian",
    "share": 1,
    "write": 1
+=======
+>>>>>>> 77745fb (Changes)
   }
  ],
  "sort_field": "modified",

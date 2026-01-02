@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+<<<<<<< HEAD
 from frappe.utils import validate_email_address, today, getdate
 
 class LibraryMember(Document):
@@ -166,3 +167,13 @@ class LibraryMember(Document):
 			return False, f"You have outstanding fines of ${total_fine}. Please pay to continue borrowing."
 
 		return True, "Eligible to borrow books"
+=======
+
+class LibraryMember(Document):
+	def before_save(self):
+		first = self.first_name
+		last = self.last_name
+		self.email_address = self.first_name.lower() + self.last_name.lower() + "@fakemail.com"
+
+	
+>>>>>>> 77745fb (Changes)
