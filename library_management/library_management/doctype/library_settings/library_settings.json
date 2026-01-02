@@ -6,170 +6,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-<<<<<<< HEAD
-  "library_info_section",
-  "library_name",
-  "library_address",
-  "column_break_4",
-  "contact_email",
-  "contact_phone",
-  "website",
-  "section_break_8",
-  "loan_period",
-  "maximum_number_of_issued_articles",
-  "column_break_11",
-  "late_fee_per_day",
-  "reservation_expiry_days",
-  "section_break_14",
-  "auto_send_reminders",
-  "reminder_days_before_due",
-  "column_break_17",
-  "auto_calculate_fines",
-  "enable_book_reservations",
-  "section_break_20",
-  "barcode_prefix",
-  "email_template_overdue",
-  "column_break_23",
-  "sms_template_overdue",
-  "notification_frequency"
- ],
- "fields": [
-  {
-   "fieldname": "library_info_section",
-   "fieldtype": "Section Break",
-   "label": "Library Information"
-  },
-  {
-   "fieldname": "library_name",
-   "fieldtype": "Data",
-   "label": "Library Name"
-  },
-  {
-   "fieldname": "library_address",
-   "fieldtype": "Text",
-   "label": "Library Address"
-  },
-  {
-   "fieldname": "column_break_4",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "contact_email",
-   "fieldtype": "Data",
-   "label": "Contact Email",
-   "options": "Email"
-  },
-  {
-   "fieldname": "contact_phone",
-   "fieldtype": "Data",
-   "label": "Contact Phone",
-   "options": "Phone"
-  },
-  {
-   "fieldname": "website",
-   "fieldtype": "Data",
-   "label": "Website",
-   "options": "URL"
-  },
-  {
-   "fieldname": "section_break_8",
-   "fieldtype": "Section Break",
-   "label": "Default Settings"
-  },
-  {
-   "default": "14",
-   "fieldname": "loan_period",
-   "fieldtype": "Int",
-   "label": "Default Loan Period (Days)"
-  },
-  {
-   "default": "5",
-   "fieldname": "maximum_number_of_issued_articles",
-   "fieldtype": "Int",
-   "label": "Default Maximum Books Allowed"
-  },
-  {
-   "fieldname": "column_break_11",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "1.00",
-   "fieldname": "late_fee_per_day",
-   "fieldtype": "Currency",
-   "label": "Default Late Fee Per Day"
-  },
-  {
-   "default": "7",
-   "fieldname": "reservation_expiry_days",
-   "fieldtype": "Int",
-   "label": "Reservation Expiry Days"
-  },
-  {
-   "fieldname": "section_break_14",
-   "fieldtype": "Section Break",
-   "label": "Automation Settings"
-  },
-  {
-   "default": "1",
-   "fieldname": "auto_send_reminders",
-   "fieldtype": "Check",
-   "label": "Auto Send Reminders"
-  },
-  {
-   "default": "3",
-   "fieldname": "reminder_days_before_due",
-   "fieldtype": "Int",
-   "label": "Reminder Days Before Due"
-  },
-  {
-   "fieldname": "column_break_17",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "1",
-   "fieldname": "auto_calculate_fines",
-   "fieldtype": "Check",
-   "label": "Auto Calculate Fines"
-  },
-  {
-   "default": "1",
-   "fieldname": "enable_book_reservations",
-   "fieldtype": "Check",
-   "label": "Enable Book Reservations"
-  },
-  {
-   "fieldname": "section_break_20",
-   "fieldtype": "Section Break",
-   "label": "Advanced Settings"
-  },
-  {
-   "default": "LIB",
-   "fieldname": "barcode_prefix",
-   "fieldtype": "Data",
-   "label": "Barcode Prefix"
-  },
-  {
-   "fieldname": "email_template_overdue",
-   "fieldtype": "Link",
-   "label": "Email Template for Overdue",
-   "options": "Email Template"
-  },
-  {
-   "fieldname": "column_break_23",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "sms_template_overdue",
-   "fieldtype": "Text",
-   "label": "SMS Template for Overdue"
-  },
-  {
-   "default": "Daily",
-   "fieldname": "notification_frequency",
-   "fieldtype": "Select",
-   "label": "Notification Frequency",
-   "options": "Daily\nWeekly\nNever"
-=======
   "loan_period",
   "maximum_number_of_issued_articles"
  ],
@@ -183,17 +19,12 @@
    "fieldname": "maximum_number_of_issued_articles",
    "fieldtype": "Int",
    "label": "Maximum Number of Issued Articles"
->>>>>>> 77745fb (Changes)
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-12-25 15:53:00.000000",
-=======
  "modified": "2022-02-03 11:10:35.768493",
->>>>>>> 77745fb (Changes)
  "modified_by": "Administrator",
  "module": "Library Management",
  "name": "Library Settings",
@@ -208,18 +39,6 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-<<<<<<< HEAD
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "Librarian",
-   "share": 1,
-   "write": 1
-=======
->>>>>>> 77745fb (Changes)
   }
  ],
  "sort_field": "modified",
