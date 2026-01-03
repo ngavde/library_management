@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "article",
+  "book",
   "library_membe",
   "author",
   "isbn",
@@ -23,8 +24,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Article",
-   "options": "Article_New",
-   "reqd": 1
+   "options": "Article_New"
+  },
+  {
+   "fieldname": "book",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Book",
+   "options": "Book"
   },
   {
    "fetch_from": "article.status",
@@ -85,7 +92,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Taken\nReturned",
+   "options": "Taken\nReturned\nIssued",
    "read_only": 1
   }
  ],

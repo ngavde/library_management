@@ -4,7 +4,18 @@
 import frappe
 from frappe.model.document import Document
 
-class LibraryTransaction(Document):	
+class LibraryTransaction(Document):
+
+	def validate(self):
+		# Ensure either article or book is specified, but not both
+		# Use getattr to handle cases where book field doesn't exist yet
+		book_value = getattr(self, 'book', None)
+
+		if not self.article and not book_value:
+			frappe.throw("Either Article or Book must be specified for a transaction")
+
+		if self.article and book_value:
+			frappe.throw("Cannot specify both Article and Book in the same transaction")
 
 	def on_submit(self):
 		if self.type == 'Available' :
@@ -13,18 +24,32 @@ class LibraryTransaction(Document):
 		if (self.type == 'Issued' and self.returned == 1):
 			self.status ='Returned'
 
-		if (self.type == 'Available'):
-			a = frappe.get_doc("Article_New",{'article_name':self.article})
-			# print('55555555555555555555555',a)
-			a.status ='Issued'
-			# a.return_status = 'Issued'
-			a.save()
+		# Handle Article_New transactions
+		if (self.type == 'Available' and self.article):
+			try:
+				a = frappe.get_doc("Article_New", self.article)
+				a.status ='Issued'
+				a.save()
+			except Exception as e:
+				frappe.log_error(f"Error updating Article_New status: {str(e)}")
 
-		if (self.type == 'Issued' and self.returned == 1):
-			b = frappe.get_doc("Article_New",{'article_name':self.article})
-			b.status = 'Available'
-			# b.return_status = 'Available'
-			b.save()
+		if (self.type == 'Issued' and self.returned == 1 and self.article):
+			try:
+				b = frappe.get_doc("Article_New", self.article)
+				b.status = 'Available'
+				b.save()
+			except Exception as e:
+				frappe.log_error(f"Error updating Article_New status on return: {str(e)}")
+
+		# Handle Book transactions
+		book_value = getattr(self, 'book', None)
+		if (self.status == 'Issued' and book_value):
+			try:
+				book_doc = frappe.get_doc("Book", book_value)
+				book_doc.update_availability_status()
+				book_doc.save()
+			except Exception as e:
+				frappe.log_error(f"Error updating Book status: {str(e)}")
 
 		
 #       APPENDING DATA TO CHILD TABLE
@@ -62,10 +87,24 @@ class LibraryTransaction(Document):
 # Book can be returned by those who borrowed it.
 	def before_save(self):
 		if self.returned == 1:
-			task = frappe.get_last_doc('Library Transaction', filters={"status": "Taken","docstatus":1,"article":self.article})
-			print('88888888888888888',task)
-			if self.library_membe != task.library_membe and self.returned == 1 and self.article == task.article:
-				frappe.throw(f"{task.library_membe} has borrowed this book, only he can return.")
+			# Handle Article_New return validation
+			if self.article:
+				try:
+					task = frappe.get_last_doc('Library Transaction', filters={"status": "Taken","docstatus":1,"article":self.article})
+					if task and self.library_membe != task.library_membe and self.returned == 1 and self.article == task.article:
+						frappe.throw(f"{task.library_membe} has borrowed this book, only he can return.")
+				except Exception as e:
+					frappe.log_error(f"Error validating Article_New return: {str(e)}")
+
+			# Handle Book return validation
+			book_value = getattr(self, 'book', None)
+			if book_value:
+				try:
+					task = frappe.get_last_doc('Library Transaction', filters={"status": "Issued","docstatus":1,"book":book_value})
+					if task and self.library_membe != task.library_membe:
+						frappe.throw(f"{task.library_membe} has borrowed this book, only he can return.")
+				except Exception as e:
+					frappe.log_error(f"Error validating Book return: {str(e)}")
 			
 	
 			

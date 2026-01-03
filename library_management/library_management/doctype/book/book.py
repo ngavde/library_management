@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
+import pymysql
 
 class Book(Document):
 	def validate(self):
@@ -43,29 +44,47 @@ class Book(Document):
 
 	def get_issued_copies(self):
 		"""Get number of currently issued copies"""
-		issued_count = frappe.db.count('Library Transaction', {
-			'book': self.name,
-			'status': 'Issued',
-			'docstatus': 1
-		})
-		return issued_count or 0
+		try:
+			issued_count = frappe.db.count('Library Transaction', {
+				'book': self.name,
+				'status': 'Issued',
+				'docstatus': 1
+			})
+			return issued_count or 0
+		except (pymysql.err.OperationalError, Exception) as e:
+			# Handle case where book field doesn't exist yet or database schema is not updated
+			if "Unknown column 'book'" in str(e):
+				frappe.log_error(f"Book field not found in Library Transaction: {str(e)}")
+			return 0
 
 	def get_average_rating(self):
 		"""Get average rating from book reviews"""
-		avg_rating = frappe.db.sql("""
-			SELECT AVG(rating)
-			FROM `tabBook Review`
-			WHERE book = %s AND docstatus = 1
-		""", [self.name])
+		try:
+			avg_rating = frappe.db.sql("""
+				SELECT AVG(rating)
+				FROM `tabBook Review`
+				WHERE book = %s AND docstatus = 1
+			""", [self.name])
 
-		return flt(avg_rating[0][0]) if avg_rating and avg_rating[0][0] else 0
+			return flt(avg_rating[0][0]) if avg_rating and avg_rating[0][0] else 0
+		except (pymysql.err.OperationalError, Exception) as e:
+			# Handle case where book field doesn't exist yet
+			if "Unknown column 'book'" in str(e):
+				frappe.log_error(f"Book field not found in Book Review: {str(e)}")
+			return 0
 
 	def get_total_reviews(self):
 		"""Get total number of reviews"""
-		return frappe.db.count('Book Review', {
-			'book': self.name,
-			'docstatus': 1
-		})
+		try:
+			return frappe.db.count('Book Review', {
+				'book': self.name,
+				'docstatus': 1
+			})
+		except (pymysql.err.OperationalError, Exception) as e:
+			# Handle case where book field doesn't exist yet
+			if "Unknown column 'book'" in str(e):
+				frappe.log_error(f"Book field not found in Book Review: {str(e)}")
+			return 0
 
 	def is_available_for_issue(self):
 		"""Check if book is available for issue"""
