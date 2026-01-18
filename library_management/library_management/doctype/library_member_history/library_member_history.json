@@ -34,7 +34,8 @@
    "in_list_view": 1,
    "label": "Member Name",
    "options": "Library Member",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fetch_from": "member_name.first_name",
