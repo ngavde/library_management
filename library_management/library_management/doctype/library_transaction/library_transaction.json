@@ -9,13 +9,27 @@
  "field_order": [
   "article",
   "book",
-  "library_membe",
-  "author",
-  "isbn",
-  "type",
+  "library_member",
+  "column_break_4",
+  "transaction_type",
   "date",
-  "returned",
+  "section_break_7",
+  "article_title",
+  "author",
+  "column_break_10",
+  "copy_number",
+  "barcode",
+  "section_break_13",
+  "due_date",
+  "return_date",
+  "column_break_16",
+  "is_overdue",
+  "fine_amount",
+  "section_break_19",
   "status",
+  "notes",
+  "column_break_22",
+  "librarian",
   "amended_from"
  ],
  "fields": [
@@ -24,29 +38,145 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Article",
-   "options": "Article_New"
+   "options": "Article_New",
+   "reqd": 1
   },
   {
    "fieldname": "book",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Book",
-   "options": "Book"
+   "label": "Book Copy",
+   "options": "Book",
+   "reqd": 1,
+   "get_query": "library_management.library_management.doctype.library_transaction.library_transaction.get_book_query"
   },
   {
-   "fetch_from": "article.status",
-   "fieldname": "type",
+   "fieldname": "library_member",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Library Member",
+   "options": "Library Member",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transaction_type",
    "fieldtype": "Select",
-   "label": "Type ",
-   "options": "Issued\nAvailable",
-   "read_only": 1
+   "in_list_view": 1,
+   "label": "Transaction Type",
+   "options": "Issue\nReturn",
+   "reqd": 1
   },
   {
    "fieldname": "date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Date",
-   "reqd": 1
+   "label": "Transaction Date",
+   "reqd": 1,
+   "default": "Now"
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break",
+   "label": "Article Information"
+  },
+  {
+   "fetch_from": "article.title",
+   "fieldname": "article_title",
+   "fieldtype": "Data",
+   "label": "Article Title",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "article.primary_author",
+   "fieldname": "author",
+   "fieldtype": "Data",
+   "label": "Author",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "book.copy_number",
+   "fieldname": "copy_number",
+   "fieldtype": "Int",
+   "label": "Copy Number",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "book.barcode",
+   "fieldname": "barcode",
+   "fieldtype": "Data",
+   "label": "Barcode",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break",
+   "label": "Return Information"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date",
+   "depends_on": "eval:doc.transaction_type=='Issue'"
+  },
+  {
+   "fieldname": "return_date",
+   "fieldtype": "Datetime",
+   "label": "Return Date",
+   "depends_on": "eval:doc.transaction_type=='Return'"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_overdue",
+   "fieldtype": "Check",
+   "label": "Is Overdue",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fine_amount",
+   "fieldtype": "Currency",
+   "label": "Fine Amount"
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break",
+   "label": "Status Information"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nIssued\nReturned\nOverdue\nLost",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "column_break_22",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "librarian",
+   "fieldtype": "Link",
+   "label": "Processed By",
+   "options": "User",
+   "default": "user",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -55,44 +185,6 @@
    "no_copy": 1,
    "options": "Library Transaction",
    "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "library_membe",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Library Member",
-   "options": "Library Member",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "article.author",
-   "fieldname": "author",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Author",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "article.isbn",
-   "fieldname": "isbn",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "ISBN",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "returned",
-   "fieldtype": "Check",
-   "label": "Returned"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Taken\nReturned\nIssued",
    "read_only": 1
   }
  ],

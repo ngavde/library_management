@@ -7,42 +7,86 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "transaction_type",
   "article",
-  "author",
-  "isbn",
-  "transaction_status",
-  "transaction_date"
+  "article_title",
+  "book",
+  "copy_number",
+  "transaction_date",
+  "due_date",
+  "return_date",
+  "status",
+  "fine_amount"
  ],
  "fields": [
   {
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "Issue\nReturn\nReservation\nReservation Fulfilled\nReservation Cancelled",
+   "width": "100px"
+  },
+  {
    "fieldname": "article",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Article"
+   "label": "Article",
+   "options": "Article_New",
+   "width": "120px"
   },
   {
-   "fieldname": "author",
+   "fieldname": "article_title",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Author"
+   "label": "Title",
+   "width": "200px"
   },
   {
-   "fieldname": "isbn",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "ISBN"
+   "fieldname": "book",
+   "fieldtype": "Link",
+   "label": "Book Copy",
+   "options": "Book",
+   "width": "120px"
+  },
+  {
+   "fieldname": "copy_number",
+   "fieldtype": "Int",
+   "label": "Copy #",
+   "width": "60px"
   },
   {
    "fieldname": "transaction_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Transaction Date"
+   "label": "Date",
+   "width": "120px"
   },
   {
-   "fieldname": "transaction_status",
-   "fieldtype": "Data",
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date",
+   "width": "100px"
+  },
+  {
+   "fieldname": "return_date",
+   "fieldtype": "Datetime",
+   "label": "Return Date",
+   "width": "120px"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Transaction Status"
+   "label": "Status",
+   "options": "Active\nCompleted\nOverdue\nCancelled",
+   "width": "100px"
+  },
+  {
+   "fieldname": "fine_amount",
+   "fieldtype": "Currency",
+   "label": "Fine",
+   "width": "80px"
   }
  ],
  "index_web_pages_for_search": 1,

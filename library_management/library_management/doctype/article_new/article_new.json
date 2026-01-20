@@ -1,37 +1,119 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:article_name",
+ "autoname": "field:title",
  "creation": "2022-02-03 10:21:01.081010",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "article_name",
-  "image",
-  "author",
-  "description",
+  "title",
+  "subtitle",
+  "column_break_3",
   "isbn",
+  "isbn13",
+  "section_break_6",
+  "primary_author",
+  "publisher",
+  "category",
+  "column_break_10",
+  "publication_date",
+  "edition",
+  "language",
+  "section_break_14",
+  "description",
+  "column_break_16",
+  "cover_image",
+  "section_break_18",
+  "copies_to_create",
+  "total_copies",
+  "available_copies",
+  "issued_copies",
+  "column_break_21",
+  "subject_keywords",
+  "dewey_classification",
+  "section_break_24",
   "status",
-  "return_sratus",
-  "publisher"
+  "article_type"
  ],
  "fields": [
   {
-   "fieldname": "article_name",
+   "fieldname": "title",
    "fieldtype": "Data",
-   "label": "Article Name",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "image",
-   "fieldtype": "Attach Image",
-   "label": "Image"
+   "fieldname": "subtitle",
+   "fieldtype": "Data",
+   "label": "Subtitle"
   },
   {
-   "fieldname": "author",
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "isbn",
    "fieldtype": "Data",
-   "label": "Author"
+   "label": "ISBN (10-digit)",
+   "length": 10
+  },
+  {
+   "fieldname": "isbn13",
+   "fieldtype": "Data",
+   "label": "ISBN-13",
+   "length": 17
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Author & Publication Information"
+  },
+  {
+   "fieldname": "primary_author",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Primary Author",
+   "options": "Author"
+  },
+  {
+   "fieldname": "publisher",
+   "fieldtype": "Link",
+   "label": "Publisher",
+   "options": "Publisher"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Book Category"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "publication_date",
+   "fieldtype": "Date",
+   "label": "Publication Date"
+  },
+  {
+   "fieldname": "edition",
+   "fieldtype": "Data",
+   "label": "Edition"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Select",
+   "label": "Language",
+   "options": "English\nSpanish\nFrench\nGerman\nItalian\nPortuguese\nChinese\nJapanese\nKorean\nArabic\nHindi\nRussian\nOther"
+  },
+  {
+   "fieldname": "section_break_14",
+   "fieldtype": "Section Break",
+   "label": "Description & Image"
   },
   {
    "fieldname": "description",
@@ -39,28 +121,82 @@
    "label": "Description"
   },
   {
-   "fieldname": "isbn",
-   "fieldtype": "Data",
-   "label": "ISBN"
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
   },
   {
+   "fieldname": "cover_image",
+   "fieldtype": "Attach Image",
+   "label": "Cover Image"
+  },
+  {
+   "fieldname": "section_break_18",
+   "fieldtype": "Section Break",
+   "label": "Inventory Summary"
+  },
+  {
+   "default": "1",
+   "fieldname": "copies_to_create",
+   "fieldtype": "Int",
+   "label": "Copies to Create",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_copies",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Copies",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_copies",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Available Copies",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "issued_copies",
+   "fieldtype": "Int",
+   "label": "Currently Issued",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "subject_keywords",
+   "fieldtype": "Small Text",
+   "label": "Subject Keywords"
+  },
+  {
+   "fieldname": "dewey_classification",
+   "fieldtype": "Data",
+   "label": "Dewey Decimal Classification"
+  },
+  {
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break",
+   "label": "Status Information"
+  },
+  {
+   "default": "Active",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Issued\nAvailable"
+   "options": "Active\nDiscontinued\nOut of Print"
   },
   {
-   "fieldname": "publisher",
-   "fieldtype": "Data",
-   "label": "Publisher"
-  },
-  {
-   "fieldname": "return_sratus",
+   "default": "Book",
+   "fieldname": "article_type",
    "fieldtype": "Select",
-   "label": "Return Sratus",
-   "options": "Issued\nReturned",
-   "read_only": 1
+   "label": "Article Type",
+   "options": "Book\nJournal\nMagazine\nNewspaper\nThesis\nManual\nReport\nOther"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -89,5 +225,5 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "article_name"
+ "title_field": "title"
 }

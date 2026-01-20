@@ -7,7 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "book",
+  "article",
   "member",
   "column_break_3",
   "reservation_date",
@@ -19,6 +19,15 @@
   "notification_sent",
   "notified_date",
   "section_break_12",
+  "article_title",
+  "author",
+  "column_break_15",
+  "total_copies",
+  "available_copies",
+  "section_break_16",
+  "available_books_list",
+  "selected_book",
+  "section_break_18",
   "notes",
   "column_break_14",
   "cancelled_by",
@@ -26,11 +35,11 @@
  ],
  "fields": [
   {
-   "fieldname": "book",
+   "fieldname": "article",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Book",
-   "options": "Book",
+   "label": "Article",
+   "options": "Article_New",
    "reqd": 1
   },
   {
@@ -95,6 +104,61 @@
   },
   {
    "fieldname": "section_break_12",
+   "fieldtype": "Section Break",
+   "label": "Additional Information"
+  },
+  {
+   "fetch_from": "article.title",
+   "fieldname": "article_title",
+   "fieldtype": "Data",
+   "label": "Article Title",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "article.primary_author",
+   "fieldname": "author",
+   "fieldtype": "Data",
+   "label": "Author",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "article.total_copies",
+   "fieldname": "total_copies",
+   "fieldtype": "Int",
+   "label": "Total Copies",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "article.available_copies",
+   "fieldname": "available_copies",
+   "fieldtype": "Int",
+   "label": "Available Copies",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_16",
+   "fieldtype": "Section Break",
+   "label": "Book Selection"
+  },
+  {
+   "fieldname": "available_books_list",
+   "fieldtype": "HTML",
+   "label": "Available Books",
+   "read_only": 1
+  },
+  {
+   "fieldname": "selected_book",
+   "fieldtype": "Link",
+   "label": "Select Book Copy",
+   "options": "Book",
+   "depends_on": "eval:doc.status=='Active'"
+  },
+  {
+   "fieldname": "section_break_18",
    "fieldtype": "Section Break",
    "label": "Additional Information"
   },
@@ -169,6 +233,6 @@
  "sort_field": "priority_level",
  "sort_order": "DESC",
  "states": [],
- "title_field": "book",
+ "title_field": "article",
  "track_changes": 1
 }

@@ -8,114 +8,134 @@ import pymysql
 
 class Book(Document):
 	def validate(self):
-		self.validate_isbn()
-		self.validate_copies()
-		self.set_available_copies()
+		self.validate_copy_number()
+		self.validate_barcode()
+		self.update_article_counts()
 
-	def validate_isbn(self):
-		"""Validate ISBN format"""
-		if self.isbn:
-			# Remove spaces and hyphens for validation
-			isbn_clean = self.isbn.replace("-", "").replace(" ", "")
-			if len(isbn_clean) != 10 or not isbn_clean.replace("X", "").isdigit():
-				frappe.throw("Invalid ISBN-10 format")
-
-		if self.isbn13:
-			# Remove spaces and hyphens for validation
-			isbn13_clean = self.isbn13.replace("-", "").replace(" ", "")
-			if len(isbn13_clean) != 13 or not isbn13_clean.isdigit():
-				frappe.throw("Invalid ISBN-13 format")
-
-	def validate_copies(self):
-		"""Validate that total copies is not less than issued copies"""
-		if self.total_copies < 0:
-			frappe.throw("Total copies cannot be negative")
-
-		# Check if reducing total copies below issued copies
-		if not self.is_new():
-			issued_copies = self.get_issued_copies()
-			if self.total_copies < issued_copies:
-				frappe.throw(f"Cannot reduce total copies below {issued_copies} issued copies")
-
-	def set_available_copies(self):
-		"""Calculate and set available copies"""
-		issued_copies = self.get_issued_copies()
-		self.available_copies = self.total_copies - issued_copies
-
-	def get_issued_copies(self):
-		"""Get number of currently issued copies"""
-		try:
-			issued_count = frappe.db.count('Library Transaction', {
-				'book': self.name,
-				'status': 'Issued',
-				'docstatus': 1
+	def validate_copy_number(self):
+		"""Validate copy number is unique within the article"""
+		if self.copy_number and self.article:
+			existing = frappe.db.exists('Book', {
+				'article': self.article,
+				'copy_number': self.copy_number,
+				'name': ['!=', self.name]
 			})
-			return issued_count or 0
-		except (pymysql.err.OperationalError, Exception) as e:
-			# Handle case where book field doesn't exist yet or database schema is not updated
-			if "Unknown column 'book'" in str(e):
-				frappe.log_error(f"Book field not found in Library Transaction: {str(e)}")
-			return 0
+			if existing:
+				frappe.throw(f"Copy number {self.copy_number} already exists for this article")
 
-	def get_average_rating(self):
-		"""Get average rating from book reviews"""
-		try:
-			avg_rating = frappe.db.sql("""
-				SELECT AVG(rating)
-				FROM `tabBook Review`
-				WHERE book = %s AND docstatus = 1
-			""", [self.name])
-
-			return flt(avg_rating[0][0]) if avg_rating and avg_rating[0][0] else 0
-		except (pymysql.err.OperationalError, Exception) as e:
-			# Handle case where book field doesn't exist yet
-			if "Unknown column 'book'" in str(e):
-				frappe.log_error(f"Book field not found in Book Review: {str(e)}")
-			return 0
-
-	def get_total_reviews(self):
-		"""Get total number of reviews"""
-		try:
-			return frappe.db.count('Book Review', {
-				'book': self.name,
-				'docstatus': 1
+	def validate_barcode(self):
+		"""Validate barcode is unique if provided"""
+		if self.barcode:
+			existing = frappe.db.exists('Book', {
+				'barcode': self.barcode,
+				'name': ['!=', self.name]
 			})
-		except (pymysql.err.OperationalError, Exception) as e:
-			# Handle case where book field doesn't exist yet
-			if "Unknown column 'book'" in str(e):
-				frappe.log_error(f"Book field not found in Book Review: {str(e)}")
-			return 0
+			if existing:
+				frappe.throw(f"Barcode {self.barcode} already exists")
+
+	def update_article_counts(self):
+		"""Update parent article's copy counts"""
+		if self.article:
+			try:
+				article_doc = frappe.get_doc('Article_New', self.article)
+				article_doc.update_copy_counts()
+				article_doc.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(f"Error updating article counts: {str(e)}")
+
+	def on_update(self):
+		"""Update article copy counts when book is updated"""
+		self.update_article_counts()
+
+	def on_trash(self):
+		"""Update article copy counts when book is deleted"""
+		if self.article:
+			try:
+				article_doc = frappe.get_doc('Article_New', self.article)
+				article_doc.update_copy_counts()
+				article_doc.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(f"Error updating article counts on deletion: {str(e)}")
 
 	def is_available_for_issue(self):
-		"""Check if book is available for issue"""
-		return self.status == "Available" and self.available_copies > 0
+		"""Check if this specific book copy is available for issue"""
+		return self.status == "Available" and self.condition not in ["Damaged", "Poor"]
+
+	def get_issue_history(self, limit=10):
+		"""Get issue history for this specific book copy"""
+		try:
+			return frappe.get_all('Library Transaction',
+				filters={'book': self.name},
+				fields=['name', 'library_member', 'date', 'status', 'returned'],
+				order_by='date desc',
+				limit=limit
+			)
+		except Exception as e:
+			frappe.log_error(f"Error getting issue history: {str(e)}")
+			return []
+
+	def get_current_issuer(self):
+		"""Get current member who has issued this book"""
+		if self.status == "Issued":
+			try:
+				transaction = frappe.db.get_value('Library Transaction', {
+					'book': self.name,
+					'status': 'Issued',
+					'returned': 0
+				}, ['library_member', 'date'])
+				return transaction
+			except Exception as e:
+				frappe.log_error(f"Error getting current issuer: {str(e)}")
+		return None
 
 	@frappe.whitelist()
-	def update_availability_status(self):
-		"""Update book status based on available copies"""
-		if self.available_copies <= 0:
-			self.status = "Issued"
-		elif self.available_copies > 0 and self.status == "Issued":
-			self.status = "Available"
-		self.save()
+	def mark_for_maintenance(self, reason=None):
+		"""Mark book for maintenance"""
+		if self.status == "Issued":
+			frappe.throw("Cannot mark issued book for maintenance")
 
-def get_books_by_category(category):
-	"""Get all books in a specific category"""
+		self.status = "Maintenance"
+		if reason:
+			if self.maintenance_log:
+				self.maintenance_log += f"\n{frappe.utils.now()}: {reason}"
+			else:
+				self.maintenance_log = f"{frappe.utils.now()}: {reason}"
+		self.save()
+		frappe.msgprint(f"Book {self.name} marked for maintenance")
+
+	@frappe.whitelist()
+	def mark_available(self):
+		"""Mark book as available after maintenance"""
+		if self.status == "Maintenance":
+			self.status = "Available"
+			if self.maintenance_log:
+				self.maintenance_log += f"\n{frappe.utils.now()}: Returned to service"
+			self.save()
+			frappe.msgprint(f"Book {self.name} marked as available")
+
+
+def get_books_by_article(article, status=None):
+	"""Get all book copies for a specific article"""
+	filters = {'article': article}
+	if status:
+		filters['status'] = status
+
 	return frappe.get_all('Book',
-		filters={'category': category, 'status': ['!=', 'Lost']},
-		fields=['name', 'title', 'author', 'available_copies']
+		filters=filters,
+		fields=['name', 'copy_number', 'barcode', 'status', 'condition', 'location'],
+		order_by='copy_number'
 	)
 
-def get_popular_books(limit=10):
-	"""Get most popular books based on issue count"""
-	popular_books = frappe.db.sql("""
-		SELECT b.name, b.title, b.author, COUNT(t.name) as issue_count
-		FROM `tabBook` b
-		LEFT JOIN `tabLibrary Transaction` t ON b.name = t.book
-		WHERE b.status != 'Lost'
-		GROUP BY b.name
-		ORDER BY issue_count DESC
-		LIMIT %s
-	""", [limit], as_dict=True)
+def get_available_books_for_article(article):
+	"""Get available book copies for a specific article"""
+	return get_books_by_article(article, 'Available')
 
-	return popular_books
+def get_next_copy_number(article):
+	"""Get the next available copy number for an article"""
+	max_copy = frappe.db.sql("""
+		SELECT MAX(copy_number)
+		FROM `tabBook`
+		WHERE article = %s
+	""", [article])
+
+	return (max_copy[0][0] or 0) + 1 if max_copy else 1
