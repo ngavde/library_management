@@ -373,6 +373,21 @@ def create_return_transaction(issue_transaction):
 	"""Create return transaction from issue transaction"""
 	issue_doc = frappe.get_doc('Library Transaction', issue_transaction)
 
+	# Validate that the issue transaction is actually issued
+	if issue_doc.transaction_type != 'Issue' or issue_doc.status != 'Issued':
+		frappe.throw(f"Cannot create return for transaction {issue_transaction}. Transaction type: {issue_doc.transaction_type}, Status: {issue_doc.status}")
+
+	# Check if return already exists
+	existing_return = frappe.db.exists('Library Transaction', {
+		'book': issue_doc.book,
+		'library_member': issue_doc.library_member,
+		'transaction_type': 'Return',
+		'docstatus': ['!=', 2]  # Not cancelled
+	})
+
+	if existing_return:
+		frappe.throw(f"Return transaction already exists for this book and member: {existing_return}")
+
 	return_doc = frappe.new_doc('Library Transaction')
 	return_doc.article = issue_doc.article
 	return_doc.book = issue_doc.book
@@ -380,6 +395,11 @@ def create_return_transaction(issue_transaction):
 	return_doc.transaction_type = "Return"
 	return_doc.date = now_datetime()
 	return_doc.due_date = issue_doc.due_date
+
+	# Save the return transaction
+	return_doc.save(ignore_permissions=True)
+
+	frappe.msgprint(f"Return transaction {return_doc.name} created for book {return_doc.book}")
 
 	return return_doc
 

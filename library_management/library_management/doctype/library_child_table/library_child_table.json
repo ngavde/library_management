@@ -79,7 +79,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Active\nCompleted\nOverdue\nCancelled",
+   "options": "Active\nCompleted\nOverdue\nCancelled\nReservation Fulfilled",
    "width": "100px"
   },
   {

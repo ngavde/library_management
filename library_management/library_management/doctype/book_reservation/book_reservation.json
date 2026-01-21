@@ -75,6 +75,7 @@
    "label": "Status & Notifications"
   },
   {
+   "allow_on_submit": 1,
    "default": "Active",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -92,12 +93,14 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "notification_sent",
    "fieldtype": "Check",
    "label": "Notification Sent"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "notified_date",
    "fieldtype": "Date",
    "label": "Notified Date"
@@ -151,11 +154,13 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "selected_book",
    "fieldtype": "Link",
    "label": "Select Book Copy",
    "options": "Book",
-   "depends_on": "eval:doc.status=='Active'"
+   "depends_on": "eval:doc.status=='Active'",
+   "get_query": "library_management.library_management.doctype.book_reservation.book_reservation.get_available_books_for_reservation"
   },
   {
    "fieldname": "section_break_18",
@@ -172,6 +177,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "cancelled_by",
    "fieldtype": "Link",
    "label": "Cancelled By",
@@ -179,6 +185,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "cancellation_reason",
    "fieldtype": "Text",
    "label": "Cancellation Reason"

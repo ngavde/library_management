@@ -343,10 +343,12 @@ class BookReservation(Document):
 		from library_management.library_management.doctype.library_transaction.library_transaction import create_return_transaction
 		return_doc = create_return_transaction(issue_transaction)
 
-		frappe.set_route('Form', 'Library Transaction', return_doc.name)
 		frappe.msgprint(f"Return transaction created for book {self.selected_book}")
 
-		return return_doc.name
+		return {
+			'return_transaction': return_doc.name,
+			'message': f'Return transaction {return_doc.name} created successfully'
+		}
 
 	def update_reservation_history_status(self):
 		"""Update the status of the corresponding reservation entry in history"""
@@ -457,8 +459,13 @@ class BookReservation(Document):
 				next_res_doc.send_availability_notification()
 
 	def before_save(self):
-		"""Check for expiry before saving"""
-		if self.status == "Active" and getdate(today()) > getdate(self.expiry_date):
+		"""Handle status changes and validation before saving"""
+		# Handle status changes after submission
+		if not self.is_new() and self.docstatus == 1:
+			self.handle_status_change()
+
+		# Check for expiry
+		if self.status == "Active" and self.expiry_date and getdate(today()) > getdate(self.expiry_date):
 			if not self.notification_sent:
 				# Never notified, just expire
 				self.status = "Expired"
@@ -466,6 +473,37 @@ class BookReservation(Document):
 				# Was notified but member didn't pick up
 				self.status = "Expired"
 				self.notify_next_in_queue()
+
+	def handle_status_change(self):
+		"""Handle status changes after submission"""
+		if self.has_value_changed('status'):
+			old_status = self.get_db_value('status')
+			new_status = self.status
+
+			# Handle cancellation
+			if new_status == "Cancelled" and old_status != "Cancelled":
+				# Release reserved book if one was selected
+				if self.selected_book:
+					try:
+						book_doc = frappe.get_doc('Book', self.selected_book)
+						if book_doc.status == 'Reserved':
+							book_doc.status = 'Available'
+							book_doc.save(ignore_permissions=True)
+					except Exception as e:
+						frappe.log_error(f"Error releasing reserved book: {str(e)}")
+
+				# Set cancellation info
+				self.cancelled_by = frappe.session.user
+
+				# Update history status
+				self.update_cancelled_reservation_history()
+
+				# Notify next person in queue
+				self.notify_next_in_queue()
+
+			# Handle fulfillment
+			elif new_status == "Fulfilled" and old_status == "Active":
+				self.update_reservation_history_status()
 
 def process_expired_reservations():
 	"""Process expired reservations (called by scheduler)"""
@@ -503,6 +541,7 @@ def check_article_availability_for_reservations(article):
 		reservation_doc = frappe.get_doc('Book Reservation', active_reservations[0].name)
 		reservation_doc.send_availability_notification()
 
+@frappe.whitelist()
 def get_reservation_queue(article):
 	"""Get reservation queue for a specific article"""
 	queue = frappe.get_all('Book Reservation',
@@ -516,6 +555,42 @@ def get_reservation_queue(article):
 	)
 
 	return queue
+
+@frappe.whitelist()
+def get_available_books_for_reservation(doctype, txt, searchfield, start, page_len, filters):
+	"""Filter books for reservation based on selected article"""
+	if not filters:
+		filters = {}
+
+	# Get the article from filters (passed from the form)
+	article = filters.get('article')
+
+	if not article:
+		# If no article is selected, return empty result
+		return []
+
+	# Build query conditions
+	conditions = ["article = %(article)s"]
+	query_params = {
+		'txt': f"%{txt}%",
+		'article': article,
+		'start': start,
+		'page_len': page_len
+	}
+
+	# Only show available books for new reservations
+	conditions.append("status = 'Available'")
+
+	where_clause = " AND ".join(conditions)
+
+	return frappe.db.sql(f"""
+		SELECT name, copy_number, barcode, status, `condition`
+		FROM `tabBook`
+		WHERE {where_clause}
+		AND (name LIKE %(txt)s OR barcode LIKE %(txt)s)
+		ORDER BY copy_number
+		LIMIT %(start)s, %(page_len)s
+	""", query_params)
 
 @frappe.whitelist()
 def get_member_reservations(member):

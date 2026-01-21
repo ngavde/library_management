@@ -51,13 +51,34 @@ frappe.ui.form.on('Book Reservation', {
 		}
 	},
 
+	setup: function(frm) {
+		// Set up query filter for selected_book field
+		frm.set_query('selected_book', function() {
+			if (frm.doc.article) {
+				return {
+					filters: {
+						'article': frm.doc.article,
+						'status': 'Available'
+					}
+				};
+			} else {
+				return {
+					filters: {
+						'name': 'none'  // Show no results if no article selected
+					}
+				};
+			}
+		});
+	},
+
 	article: function(frm) {
 		// Clear selected book when article changes
 		if (frm.doc.selected_book) {
 			frm.set_value('selected_book', '');
 		}
-		// Refresh available books list
+		// Refresh available books list and book field
 		frm.refresh_field('available_books_list');
+		frm.refresh_field('selected_book');
 	}
 });
 
@@ -89,7 +110,11 @@ function create_return_from_reservation(frm) {
 				callback: function(r) {
 					if (r.message) {
 						frappe.show_alert(__('Return transaction created successfully'), 5);
-						// The method already routes to the new transaction
+
+						// Route to the new return transaction
+						if (r.message.return_transaction) {
+							frappe.set_route('Form', 'Library Transaction', r.message.return_transaction);
+						}
 					}
 				}
 			});

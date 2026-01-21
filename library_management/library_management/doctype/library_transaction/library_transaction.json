@@ -8,8 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "article",
-  "book",
   "library_member",
+  "book",
   "column_break_4",
   "transaction_type",
   "date",
@@ -47,8 +47,7 @@
    "in_list_view": 1,
    "label": "Book Copy",
    "options": "Book",
-   "reqd": 1,
-   "get_query": "library_management.library_management.doctype.library_transaction.library_transaction.get_book_query"
+   "reqd": 1
   },
   {
    "fieldname": "library_member",
@@ -71,12 +70,12 @@
    "reqd": 1
   },
   {
+   "default": "Now",
    "fieldname": "date",
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Transaction Date",
-   "reqd": 1,
-   "default": "Now"
+   "reqd": 1
   },
   {
    "fieldname": "section_break_7",
@@ -121,16 +120,16 @@
    "label": "Return Information"
   },
   {
+   "depends_on": "eval:doc.transaction_type=='Issue'",
    "fieldname": "due_date",
    "fieldtype": "Date",
-   "label": "Due Date",
-   "depends_on": "eval:doc.transaction_type=='Issue'"
+   "label": "Due Date"
   },
   {
+   "depends_on": "eval:doc.transaction_type=='Return'",
    "fieldname": "return_date",
    "fieldtype": "Datetime",
-   "label": "Return Date",
-   "depends_on": "eval:doc.transaction_type=='Return'"
+   "label": "Return Date"
   },
   {
    "fieldname": "column_break_16",
@@ -154,12 +153,12 @@
    "label": "Status Information"
   },
   {
+   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Draft\nIssued\nReturned\nOverdue\nLost",
-   "default": "Draft"
+   "options": "Draft\nIssued\nReturned\nOverdue\nLost"
   },
   {
    "fieldname": "notes",
@@ -171,11 +170,11 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "__user",
    "fieldname": "librarian",
    "fieldtype": "Link",
    "label": "Processed By",
    "options": "User",
-   "default": "user",
    "read_only": 1
   },
   {
@@ -191,7 +190,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-15 16:29:42.372433",
+ "modified": "2026-01-21 19:07:12.118773",
  "modified_by": "Administrator",
  "module": "Library Management",
  "name": "Library Transaction",
@@ -232,6 +231,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
