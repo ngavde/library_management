@@ -476,6 +476,44 @@ def get_book_query(doctype, txt, searchfield, start, page_len, filters):
 	""", query_params)
 
 @frappe.whitelist()
+def get_member_issued_books_with_details(member):
+	"""Get all currently issued books for a member with detailed information"""
+	if not member:
+		return []
+
+	# Get all issued transactions for the member with article and book details
+	issued_books = frappe.db.sql("""
+		SELECT
+			lt.name as transaction_name,
+			lt.article,
+			lt.book,
+			lt.date as issue_date,
+			lt.due_date,
+			DATEDIFF(CURDATE(), lt.due_date) as days_overdue,
+			a.title as article_title,
+			a.author,
+			a.isbn,
+			b.copy_number,
+			b.barcode,
+			b.location,
+			b.condition as book_condition
+		FROM `tabLibrary Transaction` lt
+		INNER JOIN `tabArticle_New` a ON lt.article = a.name
+		INNER JOIN `tabBook` b ON lt.book = b.name
+		WHERE lt.library_member = %s
+		AND lt.transaction_type = 'Issue'
+		AND lt.status = 'Issued'
+		AND lt.docstatus = 1
+		ORDER BY lt.due_date ASC
+	""", [member], as_dict=True)
+
+	# Add overdue flag to each book
+	for book in issued_books:
+		book['is_overdue'] = book['days_overdue'] > 0 if book['days_overdue'] else False
+
+	return issued_books
+
+@frappe.whitelist()
 def debug_transaction_issues(book, member):
 	"""Debug utility to check transaction issues for a specific book and member"""
 	if not book or not member:
